@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_diaryfood_project/models/member.dart';
 import 'package:my_diaryfood_project/services/call_api.dart';
 import 'package:my_diaryfood_project/views/home_ui.dart';
+import 'package:my_diaryfood_project/views/register_ui.dart';
 
 class LoginUI extends StatefulWidget {
   const LoginUI({super.key});
@@ -256,10 +257,10 @@ class _LoginUIState extends State<LoginUI> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LoginUI(),
+                        builder: (context) => RegisterUI(),
                       ),
                     );
                   },

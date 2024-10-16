@@ -2,7 +2,7 @@
 
 class Member {
   String? message;
-  String? memid;
+  int? memId;
   String? memFullname;
   String? memEmail;
   String? memUsername;
@@ -11,7 +11,7 @@ class Member {
 
   Member(
       {this.message,
-      this.memid,
+      this.memId,
       this.memFullname,
       this.memEmail,
       this.memUsername,
@@ -20,7 +20,7 @@ class Member {
 
   Member.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    memid = json['memid'];
+    memId = json['memId'];
     memFullname = json['memFullname'];
     memEmail = json['memEmail'];
     memUsername = json['memUsername'];
@@ -31,7 +31,7 @@ class Member {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
-    data['memid'] = this.memid;
+    data['memId'] = this.memId;
     data['memFullname'] = this.memFullname;
     data['memEmail'] = this.memEmail;
     data['memUsername'] = this.memUsername;

@@ -229,7 +229,7 @@ class _LoginUIState extends State<LoginUI> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomeUI()));
+                                    builder: (context) => HomeUI(member: value,)));
                           } else {
                             showWaringDialog(
                                 context, 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');

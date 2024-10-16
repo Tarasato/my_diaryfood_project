@@ -39,4 +39,19 @@ class CallAPI {
       throw Exception('Failed to call API');
     }
   }
+
+  //method เรียก API อัพเดตข้อมูลสมาชิก
+  static Future<Member> callUpdateMemberAPI(Member member) async {
+    //เรียกใช้ API แล้วเก็บค่าที่ได้ไว้ในตัวแปร
+    final responseData = await http.post(
+      Uri.parse(Env.hostName + '/mydiaryfood/apis/update_member_api.php'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode(member.toJson()),
+    );
+    if (responseData.statusCode == 200) {
+      return Member.fromJson(jsonDecode(responseData.body));
+    } else {
+      throw Exception('Failed to call API');
+    }
+  }
 }

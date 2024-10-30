@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:my_diaryfood_project/views/introduction_screen_ui.dart';
 import 'package:my_diaryfood_project/views/login_ui.dart';
 
 class SplashScreenUI extends StatefulWidget {
@@ -18,7 +19,7 @@ class _SplashScreenUIState extends State<SplashScreenUI> {
       Duration(seconds: 1),
     () => Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginUI(),
+      MaterialPageRoute(builder: (context) => IntroductionUI(),
       ),
       ),
     );

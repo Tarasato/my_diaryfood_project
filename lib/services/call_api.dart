@@ -57,18 +57,36 @@ class CallAPI {
   }
 
   //method เรียก API ดึงข้อมูลการกินของ Member
-  static Future<List<Diaryfood>> callGetAllDiaryFoodByMemberAPI(Diaryfood diaryfood) async {
+  static Future<List<Diaryfood>> callGetAllDiaryFoodByMemberAPI(
+      Diaryfood diaryfood) async {
     //เรียกใช้ API แล้วเก็บค่าที่ได้ไว้ในตัวแปร
     final responseData = await http.post(
-      Uri.parse(Env.hostName + '/mydiaryfood/apis/get_all_diaryfood_by_member_api.php'),
+      Uri.parse(Env.hostName +
+          '/mydiaryfood/apis/get_all_diaryfood_by_member_api.php'),
       headers: {'content-type': 'application/json'},
       body: jsonEncode(diaryfood.toJson()),
     );
     if (responseData.statusCode == 200) {
-      final dataList = await jsonDecode(responseData.body).map<Diaryfood>((json){
+      final dataList =
+          await jsonDecode(responseData.body).map<Diaryfood>((json) {
         return Diaryfood.fromJson(json);
       }).toList();
       return dataList;
+    } else {
+      throw Exception('Failed to call API');
+    }
+  }
+
+  //method เรียก API บันทึกข้อมูลการกิน
+  static Future<Diaryfood> callInsertDiaryFoodAPI(Diaryfood diaryfood) async {
+    //เรียกใช้ API แล้วเก็บค่าที่ได้ไว้ในตัวแปร
+    final responseData = await http.post(
+      Uri.parse(Env.hostName + '/mydiaryfood/apis/insert_diaryfood_api.php'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode(diaryfood.toJson()),
+    );
+    if (responseData.statusCode == 200) {
+      return Diaryfood.fromJson(jsonDecode(responseData.body));
     } else {
       throw Exception('Failed to call API');
     }

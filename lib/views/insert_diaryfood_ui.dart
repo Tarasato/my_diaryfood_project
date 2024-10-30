@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, prefer_interpolation_to_compose_strings, no_leading_underscores_for_local_identifiers, unused_field
 
 import 'dart:async';
 import 'dart:convert';
@@ -619,7 +619,9 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
                   onPressed: () {},
                   child: Text(
                     'บันทึกการกิน',
-                    style: TextStyle(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
@@ -636,7 +638,9 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
                   onPressed: () {},
                   child: Text(
                     'ยกเลิก',
-                    style: TextStyle(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red[400],

@@ -2,7 +2,7 @@
 
 class Member {
   String? message;
-  int? memId;
+  String? memId;
   String? memFullname;
   String? memEmail;
   String? memUsername;

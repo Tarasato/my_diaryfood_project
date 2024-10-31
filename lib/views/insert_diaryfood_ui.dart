@@ -114,7 +114,12 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
   ]
       .map((e) => DropdownMenuItem<String>(
             value: e,
-            child: Text(e),
+            child: Center(
+              child: Text(
+                e,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ))
       .toList();
 

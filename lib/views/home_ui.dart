@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable, unrelated_type_equality_checks, sort_child_properties_last, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_diaryfood_project/models/diaryfood.dart';
 import 'package:my_diaryfood_project/models/member.dart';
 import 'package:my_diaryfood_project/services/call_api.dart';
@@ -50,6 +53,22 @@ class _HomeUIState extends State<HomeUI> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              if (Platform.isAndroid) {
+                //Navigator.pop(context);
+                SystemNavigator.pop();
+              } else if (Platform.isIOS) {
+                exit(0);
+              }
+            },
+            icon: Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+          )
+        ],
       ),
       body: Center(
         child: Column(
@@ -159,7 +178,21 @@ class _HomeUIState extends State<HomeUI> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => InsertDiaryfoodUI()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InsertDiaryfoodUI(
+                memId: widget.member!.memId!,
+              ),
+            ),
+          ).then((value) {
+            setState(() {
+              Diaryfood diaryfood = Diaryfood(
+                memId: widget.member!.memId,
+              );
+              getAllDiaryFoodByMember(diaryfood);
+            });
+          });
         },
         label: Text(
           'เพิ่มบันทึกการกิน',
@@ -176,7 +209,7 @@ class _HomeUIState extends State<HomeUI> {
         //   children: [
         //     SizedBox(
         //       height: MediaQuery.of(context).size.height * 0.01,
-        //     ),  
+        //     ),
         //     Text(
         //       'เพิ่มการกิน',
         //       style: TextStyle(

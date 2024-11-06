@@ -3,13 +3,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_diaryfood_project/models/diaryfood.dart';
+import 'package:my_diaryfood_project/services/call_api.dart';
+import 'package:my_diaryfood_project/views/home_ui.dart';
 
 class InsertDiaryfoodUI extends StatefulWidget {
-  const InsertDiaryfoodUI({super.key});
+  String? memId;
+  InsertDiaryfoodUI({super.key, this.memId});
 
   @override
   State<InsertDiaryfoodUI> createState() => _InsertDiaryfoodUIState();
@@ -30,7 +35,7 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
   String? _foodDateSelected;
 
   //ตัวแปรเก็บจังหวัดที่เลือก
-  String? _foodprovinceSelected;
+  String? _foodprovinceSelected = 'กรุงเทพมหานคร';
 
   //ประกาศ/สร้างตัวแปรเพื่อเก็บข้อมูลรายการที่จะเอาไปใช้กับ DropdownButton
   List<DropdownMenuItem<String>> provinceItems = [
@@ -245,7 +250,71 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
         month = 'ธันวาคม';
     }
 
-    return day + ' ' + month + ' ' + year;
+    return int.parse(day).toString() + ' ' + month + ' ' + year;
+  }
+
+  showWaringDialog(context, msg) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'คำเตือน',
+          ),
+        ),
+        content: Text(
+          msg,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'ตกลง',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future showCompleteDialog(context, msg) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'ผลการทำงาน',
+          ),
+        ),
+        content: Text(
+          msg,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'ตกลง',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -422,6 +491,7 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
                     top: MediaQuery.of(context).size.height * 0.015,
                   ),
                   child: TextField(
+                    keyboardType: TextInputType.number,
                     controller: foodPayCtrl,
                     decoration: InputDecoration(
                       hintText: 'ป้อนค่าใช้จ่าย',
@@ -621,7 +691,41 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_image64Selected == null || _image64Selected == '') {
+                      showWaringDialog(context, 'กรุณาเลือกรูปภาพ');
+                    } else if (foodShopnameCtrl.text.trim() == '') {
+                      showWaringDialog(context, 'กรุณากรอกชื่อร้าน');
+                    } else if (foodPayCtrl.text.trim() == '') {
+                      showWaringDialog(context, 'กรุณากรอกค่าใช้จ่าย');
+                    } else if (_foodDateSelected == null) {
+                      showWaringDialog(context, 'กรุณาเลือกวันที่');
+                    } else {
+                      //ส่งข้อมูลไปบันทึกลงฐานข้อมูล
+                      //แพ็คข้อมูลที่จะส่ง
+                      Diaryfood diaryfood = Diaryfood(
+                        foodImage: _image64Selected,
+                        foodShopname: foodShopnameCtrl.text.trim(),
+                        foodPay: foodPayCtrl.text.trim(),
+                        foodMeal: meal.toString(),
+                        foodDate: foodDateCtrl.text.trim(),
+                        foodProvince: _foodprovinceSelected,
+                        foodLat: _foodLat,
+                        foodLng: _foodLng,
+                        memId: widget.memId,
+                      );
+                      //ส่งข้อมูลที่แพ็คไปให้ API เพื่อบันทึกการกินลงฐานข้อมูล
+                      CallAPI.callInsertDiaryFoodAPI(diaryfood).then((value) {
+                        if (value.message == '1') {
+                          showCompleteDialog(context, 'บันทึกการกินสำเร็จ!').then((value) {
+                            Navigator.pop(context);
+                          });
+                        }else{
+                          showWaringDialog(context, 'บันทึกการกินไม่สำเร็จ! กรุณาลองใหม่อีกครั้ง');
+                        }
+                      });
+                    }
+                  },
                   child: Text(
                     'บันทึกการกิน',
                     style: TextStyle(
@@ -640,7 +744,9 @@ class _InsertDiaryfoodUIState extends State<InsertDiaryfoodUI> {
                   height: MediaQuery.of(context).size.height * 0.02,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   child: Text(
                     'ยกเลิก',
                     style: TextStyle(

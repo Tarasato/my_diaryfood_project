@@ -18,7 +18,7 @@
 --
 -- Table structure for table `member_tb`
 --
-USE mydiaryfood_db;
+
 DROP TABLE IF EXISTS `member_tb`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -29,8 +29,9 @@ CREATE TABLE `member_tb` (
   `memUsername` varchar(50) NOT NULL,
   `memPassword` varchar(50) NOT NULL,
   `memAge` int(11) DEFAULT NULL,
+  `memImage` varchar(100) NOT NULL,
   PRIMARY KEY (`memId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +39,7 @@ CREATE TABLE `member_tb` (
 --
 
 /*!40000 ALTER TABLE `member_tb` DISABLE KEYS */;
-INSERT INTO `member_tb` VALUES (1,'กรรชัย สิงห์โคต','taramiratsu@gmail.com','Tarasato','123',20),(2,'Test test','test.gamail.com','Test','1',20),(3,'Rebeca','Rebec.gmail','Rebeca','1234',20),(4,'Test2','Test2@male.com','Test2','123',20);
+INSERT INTO `member_tb` VALUES (1,'กรรชัย สิงห์โคต','taramiratsu@gmail.com','Tarasato','123',20,''),(2,'Test test','test.gamail.com','Test','1',20,''),(3,'Rebeca','Rebec.gmail','Rebeca','1234',20,''),(4,'Test2','Test2@male.com','Test2','123',20,''),(5,'Img','Img','Img','1',1,'mem_672b344bad23f_1730884683709.png');
 /*!40000 ALTER TABLE `member_tb` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +51,4 @@ INSERT INTO `member_tb` VALUES (1,'กรรชัย สิงห์โคต',
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-30 17:16:56
+-- Dump completed on 2024-11-06 16:36:06

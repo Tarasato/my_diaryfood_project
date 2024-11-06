@@ -91,4 +91,34 @@ class CallAPI {
       throw Exception('Failed to call API');
     }
   }
+
+  //method เรียก API แก้ไขบันทึกข้อมูลการกิน
+  static Future<Diaryfood> callUpdateDiaryFoodAPI(Diaryfood diaryfood) async {
+    //เรียกใช้ API แล้วเก็บค่าที่ได้ไว้ในตัวแปร
+    final responseData = await http.post(
+      Uri.parse(Env.hostName + '/mydiaryfood/apis/update_diaryfood_api.php'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode(diaryfood.toJson()),
+    );
+    if (responseData.statusCode == 200) {
+      return Diaryfood.fromJson(jsonDecode(responseData.body));
+    } else {
+      throw Exception('Failed to call API');
+    }
+  }
+
+  //method เรียก API ลบบันทึกข้อมูลการกิน
+  static Future<Diaryfood> callDeleteDiaryFoodAPI(Diaryfood diaryfood) async {
+    //เรียกใช้ API แล้วเก็บค่าที่ได้ไว้ในตัวแปร
+    final responseData = await http.post(
+      Uri.parse(Env.hostName + '/mydiaryfood/apis/delete_diaryfood_api.php'),
+      headers: {'content-type': 'application/json'},
+      body: jsonEncode(diaryfood.toJson()),
+    );
+    if (responseData.statusCode == 200) {
+      return Diaryfood.fromJson(jsonDecode(responseData.body));
+    } else {
+      throw Exception('Failed to call API');
+    }
+  }
 }

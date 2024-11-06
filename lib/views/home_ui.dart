@@ -9,6 +9,8 @@ import 'package:my_diaryfood_project/models/member.dart';
 import 'package:my_diaryfood_project/services/call_api.dart';
 import 'package:my_diaryfood_project/utils/env.dart';
 import 'package:my_diaryfood_project/views/insert_diaryfood_ui.dart';
+import 'package:my_diaryfood_project/views/login_ui.dart';
+import 'package:my_diaryfood_project/views/up_del_diaryfood_ui.dart';
 import 'package:my_diaryfood_project/views/update_profile_ui.dart';
 
 class HomeUI extends StatefulWidget {
@@ -58,9 +60,13 @@ class _HomeUIState extends State<HomeUI> {
             onPressed: () {
               if (Platform.isAndroid) {
                 //Navigator.pop(context);
-                SystemNavigator.pop();
+                //SystemNavigator.pop();
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginUI()));
               } else if (Platform.isIOS) {
-                exit(0);
+                //exit(0);
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginUI()));
               }
             },
             icon: Icon(
@@ -127,52 +133,79 @@ class _HomeUIState extends State<HomeUI> {
               ),
             ),
             Expanded(
-                child: FutureBuilder<List<Diaryfood>>(
-              future: diaryfoodData,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data![0].message == [0]) {
-                    return Text('ไม่มีข้อมูลการกิน');
-                  } else {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              onTap: () {},
-                              tileColor: index % 2 == 0
-                                  ? Colors.red[50]
-                                  : Colors.green[50],
-                              leading: ClipRRect(
-                                child: Image.network(
-                                  '${Env.hostName}/mydiaryfood/assets/images/picupload/foods/${snapshot.data![index].foodImage}',
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.25,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.25,
-                                  fit: BoxFit.cover,
+              child: FutureBuilder<List<Diaryfood>>(
+                future: diaryfoodData,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data![0].message == [0]) {
+                      return Text('ไม่มีข้อมูลการกิน');
+                    } else {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UpDelDiaryfoodUI(
+                                          diaryfood: snapshot.data![index],
+                                        ),
+                                      )).then((value) {
+                                    setState(() {
+                                      Diaryfood diaryfood = Diaryfood(
+                                        memId: widget.member!.memId,
+                                      );
+                                      getAllDiaryFoodByMember(diaryfood);
+                                    });
+                                  });
+                                },
+                                tileColor: index % 2 == 0
+                                    ? Colors.red[50]
+                                    : Colors.green[50],
+                                leading: ClipRRect(
+                                  child: Image.network(
+                                    '${Env.hostName}/mydiaryfood/assets/images/picupload/foods/${snapshot.data![index].foodImage}',
+                                    width: MediaQuery.of(context).size.width *
+                                        0.25,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.25,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                title: Text(
+                                  snapshot.data![index].foodShopname!,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.green[800],
                                 ),
                               ),
-                              title: Text(
-                                snapshot.data![index].foodShopname!,
-                              ),
-                              trailing: Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.green[800],
-                              ),
-                            ),
-                            Divider(),
-                          ],
-                        );
-                      },
+                              Divider(),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                          width: MediaQuery.of(context).size.width * 0.22,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
                     );
                   }
-                } else {
-                  return CircularProgressIndicator();
-                }
-              },
-            ))
+                },
+              ),
+            ),
           ],
         ),
       ),

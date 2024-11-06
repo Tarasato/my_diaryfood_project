@@ -8,6 +8,7 @@ class Member {
   String? memUsername;
   String? memPassword;
   String? memAge;
+  String? memImage;
 
   Member(
       {this.message,
@@ -16,7 +17,8 @@ class Member {
       this.memEmail,
       this.memUsername,
       this.memPassword,
-      this.memAge});
+      this.memAge,
+      this.memImage});
 
   Member.fromJson(Map<String, dynamic> json) {
     message = json['message'];
@@ -26,6 +28,7 @@ class Member {
     memUsername = json['memUsername'];
     memPassword = json['memPassword'];
     memAge = json['memAge'];
+    memImage = json['memImage'];
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +40,7 @@ class Member {
     data['memUsername'] = this.memUsername;
     data['memPassword'] = this.memPassword;
     data['memAge'] = this.memAge;
+    data['memImage'] = this.memImage;
     return data;
   }
 }

@@ -42,7 +42,7 @@ CREATE TABLE `diaryfood_tb` (
 --
 
 /*!40000 ALTER TABLE `diaryfood_tb` DISABLE KEYS */;
-INSERT INTO `diaryfood_tb` VALUES (1,'Tiramisu',1,'tiramisu.png',250,'30 ตุลาคม 257','กรุมเทพมหานคร',100.3,300.5,1),(2,'Cakeshop',2,'cake.png',150,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.2,300.5,1),(3,'ชิ้นปิ้ง',3,'meatball.png',110,'29 ตุลาคม 2567','กรุงเทพมหานคร',100.6,300.3,2),(4,'หนมหวาน',4,'snack.png',80,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.31,300.69,2);
+INSERT INTO `diaryfood_tb` VALUES (1,'Tiramisu',1,'tiramisu.png',250,'30 ตุลาคม 257','กรุงเทพมหานคร',100.3,300.5,1),(2,'Cakeshop',2,'cake.png',150,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.2,300.5,1),(3,'ชิ้นปิ้ง',3,'meatball.png',110,'29 ตุลาคม 2567','กรุงเทพมหานคร',100.6,300.3,2),(4,'หนมหวาน',4,'snack.png',80,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.31,300.69,2);
 /*!40000 ALTER TABLE `diaryfood_tb` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

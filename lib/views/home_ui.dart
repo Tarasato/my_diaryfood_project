@@ -84,12 +84,20 @@ class _HomeUIState extends State<HomeUI> {
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(100),
-              child: Image.network(
-                'https://cdn.pixabay.com/photo/2024/09/23/05/54/wave-9067749_640.jpg',
-                width: MediaQuery.of(context).size.width * 0.45,
-                height: MediaQuery.of(context).size.height * 0.2,
-                fit: BoxFit.cover,
-              ),
+              child: widget.member!.memImage ==
+                      '' //ถ้าไม่มีรูปภาพให้ใช้รูปภาพ default ที่เรากำหนดไว้
+                  ? Image.network(
+                      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(
+                      '${Env.hostName}/mydiaryfood/assets/images/picupload/memImages/${widget.member!.memImage}',
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      fit: BoxFit.cover,
+                    ),
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.045,
@@ -116,6 +124,7 @@ class _HomeUIState extends State<HomeUI> {
                   if (value != null) {
                     //เอาค่าที่ส่งกลับมาหลังจากกดปุ่ม Update Profile มาแสดง
                     setState(() {
+                      widget.member?.memImage = value.memImage;
                       widget.member?.memEmail = value.memEmail;
                       widget.member?.memUsername = value.memUsername;
                       widget.member?.memPassword = value.memPassword;
@@ -136,59 +145,70 @@ class _HomeUIState extends State<HomeUI> {
               child: FutureBuilder<List<Diaryfood>>(
                 future: diaryfoodData,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data![0].message == [0]) {
-                      return Text('ไม่มีข้อมูลการกิน');
-                    } else {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => UpDelDiaryfoodUI(
-                                          diaryfood: snapshot.data![index],
-                                        ),
-                                      )).then((value) {
-                                    setState(() {
-                                      Diaryfood diaryfood = Diaryfood(
-                                        memId: widget.member!.memId,
-                                      );
-                                      getAllDiaryFoodByMember(diaryfood);
-                                    });
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.1,
+                        ),
+                        Expanded(
+                          //height: MediaQuery.of(context).size.height * 0.1,
+                          //width: MediaQuery.of(context).size.width * 0.22,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
+                    );
+                  } else if (snapshot.data == null) {
+                    return Text('ไม่มีข้อมูลการกิน');
+                  } else if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UpDelDiaryfoodUI(
+                                        diaryfood: snapshot.data![index],
+                                      ),
+                                    )).then((value) {
+                                  setState(() {
+                                    Diaryfood diaryfood = Diaryfood(
+                                      memId: widget.member!.memId,
+                                    );
+                                    getAllDiaryFoodByMember(diaryfood);
                                   });
-                                },
-                                tileColor: index % 2 == 0
-                                    ? Colors.red[50]
-                                    : Colors.green[50],
-                                leading: ClipRRect(
-                                  child: Image.network(
-                                    '${Env.hostName}/mydiaryfood/assets/images/picupload/foods/${snapshot.data![index].foodImage}',
-                                    width: MediaQuery.of(context).size.width *
-                                        0.25,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.25,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                title: Text(
-                                  snapshot.data![index].foodShopname!,
-                                ),
-                                trailing: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.green[800],
+                                });
+                              },
+                              tileColor: index % 2 == 0
+                                  ? Colors.red[50]
+                                  : Colors.green[50],
+                              leading: ClipRRect(
+                                child: Image.network(
+                                  '${Env.hostName}/mydiaryfood/assets/images/picupload/foods/${snapshot.data![index].foodImage}',
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.25,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.25,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              Divider(),
-                            ],
-                          );
-                        },
-                      );
-                    }
+                              title: Text(
+                                snapshot.data![index].foodShopname!,
+                              ),
+                              trailing: Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.green[800],
+                              ),
+                            ),
+                            Divider(),
+                          ],
+                        );
+                      },
+                    );
                   } else {
                     return Column(
                       children: [

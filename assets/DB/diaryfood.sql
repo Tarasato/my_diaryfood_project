@@ -34,7 +34,7 @@ CREATE TABLE `diaryfood_tb` (
   `foodLng` double NOT NULL,
   `memId` int(11) NOT NULL,
   PRIMARY KEY (`foodId`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `diaryfood_tb` (
 --
 
 /*!40000 ALTER TABLE `diaryfood_tb` DISABLE KEYS */;
-INSERT INTO `diaryfood_tb` VALUES (1,'Tiramisu',1,'tiramisu.png',250,'30 ตุลาคม 257','กรุงเทพมหานคร',100.3,300.5,1),(2,'Cakeshop',2,'cake.png',150,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.2,300.5,1),(3,'ชิ้นปิ้ง',3,'meatball.png',110,'29 ตุลาคม 2567','กรุงเทพมหานคร',100.6,300.3,2),(4,'หนมหวาน',4,'snack.png',80,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.31,300.69,2),(5,'Sau Shop 3',3,'pic_672b2b49ce5e3_1730882377845.jpg',480,'15 พฤศจิกายน 2567','กรุงเทพมหานคร',13.707632,100.3569126,1);
+INSERT INTO `diaryfood_tb` VALUES (1,'Tiramisu',1,'tiramisu.png',250,'30 ตุลาคม 257','กรุงเทพมหานคร',100.3,300.5,1),(2,'Cakeshop',2,'cake.png',150,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.2,300.5,1),(3,'ชิ้นปิ้ง',3,'pic_672ef6a4c182a_1731131044793.png',110,'29 ตุลาคม 2567','กรุงเทพมหานคร',100.6,300.3,2),(4,'หนมหวาน',4,'snack.png',80,'30 ตุลาคม 2567','กรุงเทพมหานคร',100.31,300.69,2);
 /*!40000 ALTER TABLE `diaryfood_tb` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +54,4 @@ INSERT INTO `diaryfood_tb` VALUES (1,'Tiramisu',1,'tiramisu.png',250,'30 ตุ�
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-06 16:35:54
+-- Dump completed on 2024-11-09 13:33:21

@@ -1,3 +1,3 @@
 class Env {
-  static String hostName = 'http://10.1.0.209';
+  static String hostName = 'http://192.168.31.130';
 }

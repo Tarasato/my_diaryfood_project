@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, must_be_immutable
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:my_diaryfood_project/models/member.dart';
 import 'package:my_diaryfood_project/services/call_api.dart';
+import 'package:my_diaryfood_project/utils/env.dart';
 
 class UpdateProfileUI extends StatefulWidget {
   Member? member;
@@ -87,6 +92,41 @@ class _UpdateProfileUIState extends State<UpdateProfileUI> {
     );
   }
 
+  //method เปิดกล้องถ่ายรูป
+  Future<void> _openCamera() async {
+    final XFile? _picker = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      imageQuality: 80,
+      preferredCameraDevice: CameraDevice.rear,
+    );
+
+    if (_picker != null) {
+      setState(() {
+        _imageSelected = File(_picker.path);
+        _image64Selected = base64Encode(_imageSelected!.readAsBytesSync());
+      });
+    }
+  }
+
+  // สร้างตัวแปร image ให้เก็บไฟล์ภาพที่ถ่ายจากกล้อง/เลือกจากแกลลอรี่
+  File? _imageSelected;
+
+  String? _image64Selected;
+
+  //method เปิดแกลลอรี่เลือกรูป
+  Future<void> _openGallery() async {
+    final XFile? _picker = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (_picker != null) {
+      setState(() {
+        _imageSelected = File(_picker.path);
+        _image64Selected = base64Encode(_imageSelected!.readAsBytesSync());
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -130,14 +170,83 @@ class _UpdateProfileUIState extends State<UpdateProfileUI> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.045,
               ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Image.network(
-                  'https://cdn.pixabay.com/photo/2024/09/23/05/54/wave-9067749_640.jpg',
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  fit: BoxFit.cover,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.width * 0.5,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 4, color: Colors.green),
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: widget.member!.memImage == '' &&
+                                _imageSelected == null
+                            ? NetworkImage(
+                                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                              )
+                            : widget.member!.memImage != null &&
+                                    _imageSelected == null
+                                ? NetworkImage(
+                                    '${Env.hostName}/mydiaryfood/assets/images/picupload/memImages/${widget.member!.memImage}',
+                                  )
+                                : _imageSelected != null
+                                    ? FileImage(_imageSelected!)
+                                    : NetworkImage(
+                                        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
+                                      ),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              onTap: () {
+                                _openCamera()
+                                    .then((value) => Navigator.pop(context));
+                              },
+                              leading: Icon(
+                                Icons.camera_alt,
+                                color: Colors.red,
+                              ),
+                              title: Text(
+                                'Open Camera...',
+                              ),
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                              height: 5.0,
+                            ),
+                            ListTile(
+                              onTap: () {
+                                _openGallery()
+                                    .then((value) => Navigator.pop(context));
+                              },
+                              leading: Icon(
+                                Icons.browse_gallery,
+                                color: Colors.blue,
+                              ),
+                              title: Text(
+                                'Open Gallery...',
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.camera_alt,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -407,7 +516,8 @@ class _UpdateProfileUIState extends State<UpdateProfileUI> {
                         memPasswordCtrl.text.isEmpty ||
                         memAgeCtrl.text.isEmpty) {
                       showWaringDialog(context, 'กรุณาป้อนข้อมูลให้ครบถ้วน');
-                    } else {
+                    } else if( _imageSelected == null) {
+                      //ไม่ได้แก้ไขภาพ
                       //ส่งข้อมูลไปเก็บลงฐานข้อมูล
                       Member member = Member(
                         memId: widget.member!.memId!,
@@ -415,6 +525,29 @@ class _UpdateProfileUIState extends State<UpdateProfileUI> {
                         memUsername: memUsernameCtrl.text.trim(),
                         memPassword: memPasswordCtrl.text.trim(),
                         memAge: memAgeCtrl.text.trim(),
+                      );
+                      //เรียกใช้ API
+                      CallAPI.callUpdateMemberAPI(member).then((value) {
+                        if (value.message == '1') {
+                          showCompleteDialog(context, 'บันทึกการแก้ไขสำเร็จ!!')
+                              .then((value) {
+                            Navigator.pop(context, member);
+                          });
+                        } else {
+                          showWaringDialog(context,
+                              'บันทึกการแก้ไขไม่สําเร็จ กรุณาลองใหม่อีกครั้ง');
+                        }
+                      });
+                    } else if(_imageSelected != null) {
+                      //กรณีแก้ไขภาพ
+                      //ส่งข้อมูลไปเก็บลงฐานข้อมูล
+                      Member member = Member(
+                        memId: widget.member!.memId!,
+                        memEmail: memEmailCtrl.text.trim(),
+                        memUsername: memUsernameCtrl.text.trim(),
+                        memPassword: memPasswordCtrl.text.trim(),
+                        memAge: memAgeCtrl.text.trim(),
+                        memImage: _image64Selected,
                       );
                       //เรียกใช้ API
                       CallAPI.callUpdateMemberAPI(member).then((value) {

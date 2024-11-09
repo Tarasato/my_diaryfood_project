@@ -170,7 +170,7 @@ class _RegisterUIState extends State<RegisterUI> {
                       image: DecorationImage(
                         image: _imageSelected == null
                             ? NetworkImage(
-                                'https://cdn.pixabay.com/photo/2024/09/23/05/54/wave-9067749_640.jpg',
+                                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
                               )
                             : FileImage(_imageSelected!),
                         fit: BoxFit.cover,
@@ -508,6 +508,11 @@ class _RegisterUIState extends State<RegisterUI> {
                               .then((value) {
                             Navigator.pop(context);
                           });
+                        }else if(value.message == '2'){
+                          showWaringDialog(context, 'ชื่อผู้ใช้นี้มีอยู่ในระบบแล้ว');
+
+                        }else if(value.message == '3'){
+                          showWaringDialog(context, 'ชื่อนี้มีอยู่ในระบบแล้ว');
                         } else {
                           showWaringDialog(context,
                               'ลงทะเบียนไม่สําเร็จ กรุณาลองใหม่อีกครั้ง');

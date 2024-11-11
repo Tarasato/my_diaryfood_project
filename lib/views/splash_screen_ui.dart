@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_diaryfood_project/views/introduction_screen_ui.dart';
-import 'package:my_diaryfood_project/views/login_ui.dart';
 
 class SplashScreenUI extends StatefulWidget {
   const SplashScreenUI({super.key});

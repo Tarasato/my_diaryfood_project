@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:my_diaryfood_project/models/diaryfood.dart';
 import 'package:my_diaryfood_project/models/member.dart';
 import 'package:my_diaryfood_project/services/call_api.dart';
